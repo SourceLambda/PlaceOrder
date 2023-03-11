@@ -4,10 +4,10 @@ from .models import Bill, Product
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ('_id', 'name', 'description', 'price', 'quantity')
+        fields = '__all__'
 
 class BillSerializer(serializers.ModelSerializer):
     #products = ProductSerializer(many=True)
     class Meta:
         model = Bill
-        fields = ('_idCliente', '_id', 'total', 'date', 'user', 'products')
+        fields = '__all__'
