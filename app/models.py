@@ -19,6 +19,7 @@ class Bill(models.Model):
     total = models.FloatField()
     date = models.DateTimeField()
     user = models.CharField(max_length=100)
+    state= models.CharField(max_length=50, default='Pendiente')
    # products = models.IntegerField()
     products = models.ArrayField(
         model_container=Product
