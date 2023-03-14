@@ -14,15 +14,10 @@ from app.serializers import BillSerializer
 def billApi(request,id=0):
     if request.method=='GET':
         if id!=0:
-            bills = Bill.objects.get(idBill=id)
-            bills_serializer = BillSerializer(bills)
-            temp=json.loads(json.dumps(bills_serializer.data))
-            products=json.loads(temp['products'])
-            temp['products']=products
+            bill=Abill(request,id)
         else:
             bills = Bill.objects.all()
             bills_serializer = BillSerializer(bills,many=True)
-
             temp=json.loads(json.dumps(bills_serializer.data))
             for bill in temp:
                 products=json.loads(bill['products'])
@@ -41,20 +36,39 @@ def billApi(request,id=0):
         return JsonResponse("Failed to Add.",safe=False)
     elif request.method=='PUT':
         bill_data=JSONParser().parse(request)
-        bill=Bill.objects.get(_id=bill_data['idBill'])
+        bill=Bill.objects.get(idBill=bill_data['idBill'])
         bill_serializer=BillSerializer(bill,data=bill_data)
         if bill_serializer.is_valid():
             bill_serializer.save()
             return JsonResponse("Updated Successfully!!",safe=False)
         return JsonResponse("Failed to Update.",safe=False)
     elif request.method=='DELETE':
-        bill=Bill.objects.get(_id=id)
+        bill=Bill.objects.get(idBill=id)
         bill.delete()
         return JsonResponse("Deleted Succefully!!",safe=False)
     
+def historyApi(request,id):
+    if request.method=='GET':
+        history = Bill.objects.filter(idCliente=id)
+        history_serializer = BillSerializer(history,many=True)
+        temp=json.loads(json.dumps(history_serializer.data))
+        for bill in temp:
+            products=json.loads(bill['products'])
+            bill['products']=products
+        return JsonResponse(temp,safe=False)
 def Calculatetotal(products):
     total=0
     for product in products:
         total=total+product['price']*product['quantity']
     return total
+
+def Abill(request,id):
+    bills = Bill.objects.get(idBill=id)
+    bills_serializer = BillSerializer(bills)
+    temp=json.loads(json.dumps(bills_serializer.data))
+    products=json.loads(temp['products'])
+    temp['products']=products
+    return (temp)
+
+
     
