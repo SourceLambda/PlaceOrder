@@ -15,7 +15,7 @@ class Product(models.Model):
 
 class Bill(models.Model):
     idCliente = models.IntegerField()
-    idBill = models.IntegerField()
+    idBill = models.IntegerField(primary_key=True, auto_created=True)
     total = models.FloatField()
     date = models.DateTimeField()
     user = models.CharField(max_length=100)

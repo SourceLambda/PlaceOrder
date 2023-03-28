@@ -13,8 +13,12 @@ from app.serializers import BillSerializer
 @csrf_exempt
 def billApi(request,id=0):
     if request.method=='GET':
-        if id!=0:
-            bill=Abill(request,id)
+        if id!=0: # se trae todas las facturas
+            bills = Bill.objects.get(idBill=id)
+            bills_serializer = BillSerializer(bills)
+            temp=json.loads(json.dumps(bills_serializer.data))
+            products=json.loads(temp['products'])
+            temp['products']=products
         else:
             bills = Bill.objects.all()
             bills_serializer = BillSerializer(bills,many=True)
@@ -27,10 +31,14 @@ def billApi(request,id=0):
         bill_data=JSONParser().parse(request)
         total=Calculatetotal(bill_data['products'])
         bill_data['total']=total
+        bill_data["idBill"]=Bill.objects.count()+1
         bill_serializer=BillSerializer(data=bill_data)
         if bill_serializer.is_valid():
             bill_serializer.save()
-            return JsonResponse("Added Successfully!!",safe=False)
+            temp=json.loads(json.dumps(bill_serializer.data))
+            products=json.loads(temp['products'])
+            temp['products']=products
+            return JsonResponse(temp,safe=False)
         message = bill_serializer.errors
         print(message)
         return JsonResponse("Failed to Add.",safe=False)
@@ -62,13 +70,6 @@ def Calculatetotal(products):
         total=total+product['price']*product['quantity']
     return total
 
-def Abill(request,id):
-    bills = Bill.objects.get(idBill=id)
-    bills_serializer = BillSerializer(bills)
-    temp=json.loads(json.dumps(bills_serializer.data))
-    products=json.loads(temp['products'])
-    temp['products']=products
-    return (temp)
-
-
+def StrToJSON(str):
+    return json.loads(str)
     
