@@ -42,18 +42,30 @@ def billApi(request,id=0):
         message = bill_serializer.errors
         print(message)
         return JsonResponse("Failed to Add.",safe=False)
+    
     elif request.method=='PUT':
         bill_data=JSONParser().parse(request)
         bill=Bill.objects.get(idBill=bill_data['idBill'])
-        bill_serializer=BillSerializer(bill,data=bill_data)
-        if bill_serializer.is_valid():
-            bill_serializer.save()
-            return JsonResponse("Updated Successfully!!",safe=False)
-        return JsonResponse("Failed to Update.",safe=False)
+        try:
+            for field in bill_data:
+                setattr(bill,field,bill_data[field])
+            bill.save()
+        except Exception as e:
+            print(e)
+            pass
+        #Retornar la factura actualizada
+        bill_serializer=BillSerializer(bill)
+        temp=json.loads(json.dumps(bill_serializer.data))
+        products=json.loads(temp['products'])
+        temp['products']=products
+        return JsonResponse(temp,safe=False)
+    
+
     elif request.method=='DELETE':
         bill=Bill.objects.get(idBill=id)
         bill.delete()
-        return JsonResponse("Deleted Succefully!!",safe=False)
+        str1="Deleted Succefully!, IdBill: !"+str(id)
+        return JsonResponse(str1 ,safe=False)
     
 def historyApi(request,id):
     if request.method=='GET':
