@@ -14,7 +14,7 @@ class Product(models.Model):
         abstract = True
 
 class Bill(models.Model):
-    idCliente = models.IntegerField()
+    idCliente =models.CharField(max_length=300)
     idBill = models.IntegerField(primary_key=True, auto_created=True)
     total = models.FloatField()
     date = models.DateTimeField()

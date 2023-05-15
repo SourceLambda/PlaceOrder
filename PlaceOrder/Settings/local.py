@@ -13,7 +13,8 @@ DATABASES = {
         'ENGINE': 'djongo',
         'NAME': 'PlaceOrder' ,
         'CLIENT' :  {
-            'host': 'mongodb+srv://majimenezh:4ZdwP8dn7uShM0af@microservicio-pagos.w8bjvui.mongodb.net/?retryWrites=true&w=majority'
+            'host': 'mongodb+srv://majimenezh:4ZdwP8dn7uShM0af@microservicio-pagos.w8bjvui.mongodb.net/test'
+           # 'host': 'mongodb+srv://majimenezh:4QEUPsv1luJsqE9H@cluster0.jflrpck.mongodb.net/test'
         }
     }
 }

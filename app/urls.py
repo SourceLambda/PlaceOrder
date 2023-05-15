@@ -4,6 +4,5 @@ from app import views
 urlpatterns = [
     re_path(r'^api/bill$', views.billApi),
     re_path(r'^api/bill/([0-9]+)$', views.billApi),
-    re_path(r'api/history/([0-9]+)$', views.historyApi)
-
+    re_path(r'api/history/([0-9a-z-]+)/$', views.historyApi)
 ]
